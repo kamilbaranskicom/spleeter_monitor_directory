@@ -22,10 +22,8 @@ spleeter_monitor_directory() {
     echo "${LOGNAME} Monitoring '$MONITOR_DIRECTORY' directory."
 
     inotifywait -m "$MONITOR_DIRECTORY" -e close_write -e moved_to | while read NEVERMIND ACTION FILENAME; do
-        DIRECTORY=$MONITOR_DIRECTORY
-
-        echo "${LOGNAME} $FILENAME appeared in ${DIRECTORY}. Spleeting $TXT..."
-        spleeter separate -p $MODEL -o "$MONITOR_DIRECTORY" -f "${OUTPUT_SUBDIRECTORY}/{filename}_{instrument}.{codec}" "${DIRECTORY}/${FILENAME}"
+        echo "${LOGNAME} $FILENAME appeared in ${MONITOR_DIRECTORY}. Spleeting $TXT..."
+        spleeter separate -p $MODEL -o "$MONITOR_DIRECTORY" -f "${OUTPUT_SUBDIRECTORY}/{filename}_{instrument}.{codec}" "${MONITOR_DIRECTORY}/${FILENAME}"
         echo "${LOGNAME} $FILENAME spleeting finished."
     done
 }
