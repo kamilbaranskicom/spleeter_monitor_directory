@@ -10,6 +10,7 @@ cd "${GLOBAL_SMD_PATH}"
 # add the path to spleeter and ffmpeg
 PATH="/opt/anaconda3/bin/:${PATH}"
 
+
 spleeter_monitor_directory() {
     STEMS="$1"
 
@@ -20,6 +21,7 @@ spleeter_monitor_directory() {
     OUTPUT_DIRECTORY="${MONITOR_DIRECTORY}/{OUTPUT_SUBDIRECTORY}"
     LOGNAME="[spleeter_monitor_dir:]"
 
+    # let's create the directory if it doesn't exist
     mkdir -p "$MONITOR_DIRECTORY"
 
     echo "${LOGNAME} Monitoring '$MONITOR_DIRECTORY' directory."
@@ -30,6 +32,7 @@ spleeter_monitor_directory() {
         echo "${LOGNAME} $FILENAME spleeting finished."
     done
 }
+
 
 case "$1" in
     2)
