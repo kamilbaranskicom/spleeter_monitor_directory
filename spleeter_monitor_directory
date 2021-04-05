@@ -1,6 +1,6 @@
 #!/bin/bash
 # monitor directory and split files with spleeter (deezer).
-# v 0.1
+# v 0.2
 # (c) kamilbaranski.com
 
 # set the parent directory, where {2,4,5}stems directories will be created & monitored.
@@ -13,35 +13,20 @@ spleeter_monitor_directory() {
     MONITOR_DIRECTORY="${GLOBAL_SMD_PATH}/${STEMS}stems"
     TXT="${STEMS} stems"
     MODEL="spleeter:${STEMS}stems-16kHz"
-    OUTPUT_DIRECTORY="${GLOBAL_SMD_PATH}/${STEMS}stems/output"
+    OUTPUT_SUBDIRECTORY="output"
+    OUTPUT_DIRECTORY="${MONITOR_DIRECTORY}/{OUTPUT_SUBDIRECTORY}"
+    LOGNAME="[spleeter_monitor_dir:]"
 
     mkdir -p "$MONITOR_DIRECTORY"
 
-    echo "[spleeter_monitor_dir:] Monitoring '$MONITOR_DIRECTORY' directory."
+    echo "${LOGNAME} Monitoring '$MONITOR_DIRECTORY' directory."
 
     inotifywait -m "$MONITOR_DIRECTORY" -e close_write -e moved_to | while read NEVERMIND ACTION FILENAME; do
         DIRECTORY=$MONITOR_DIRECTORY
 
-        echo "[spleeter_monitor_dir:] '$FILENAME' appeared in directory '${DIRECTORY}' via '${ACTION}'. Spleeting $TXT..."
-        spleeter separate -p $MODEL -o "$DIRECTORY" "${DIRECTORY}/${FILENAME}" > /dev/null
-        echo "[spleeter_monitor_dir:] '$FILENAME' - spleeting finished. Renaming files..."
-
-        # the following is also spleeter directory name for outputted files
-        FILEBASE="${FILENAME%.*}"
-
-        # but we want the files elsewhere
-        mkdir -p "$OUTPUT_DIRECTORY"
-        OUTPUTTED_DIRECTORY="${MONITOR_DIRECTORY}/${FILEBASE}"
-
-        find "${OUTPUTTED_DIRECTORY}/" -type f -exec basename \{} \; | while read -r OUTPUTTED_FILENAME; do
-            OUTPUTTED_FILEBASE="${OUTPUTTED_FILENAME%.*}"
-            OUTPUTTED_EXT="${OUTPUTTED_FILENAME##*.}"
-            FINAL_FILENAME="${FILEBASE}.${OUTPUTTED_FILEBASE}.${OUTPUTTED_EXT}"
-
-            mv "${OUTPUTTED_DIRECTORY}/${OUTPUTTED_FILENAME}" "${OUTPUT_DIRECTORY}/${FINAL_FILENAME}"
-            echo "[spleeter_monitor_dir:] '${OUTPUTTED_DIRECTORY}/${OUTPUTTED_FILENAME}' renamed and moved to '${OUTPUT_DIRECTORY}/${FINAL_FILENAME}'"
-        done
-        rm -d "$OUTPUTTED_DIRECTORY"
+        echo "${LOGNAME} $FILENAME appeared in ${DIRECTORY}. Spleeting $TXT..."
+        spleeter separate -p $MODEL -o "$MONITOR_DIRECTORY" -f "${OUTPUT_SUBDIRECTORY}/{filename}_{instrument}.{codec}" "${DIRECTORY}/${FILENAME}"
+        echo "${LOGNAME} $FILENAME spleeting finished."
     done
 }
 
