@@ -1,0 +1,12 @@
+[Unit]
+After=network.service
+
+[Service]
+ExecStart=/home/kb/spleeter_monitor_directory/run
+Type=forking
+User=kb
+Group=kb
+
+[Install]
+WantedBy=multi-user.target
+

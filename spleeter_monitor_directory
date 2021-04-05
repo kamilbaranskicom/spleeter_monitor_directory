@@ -5,7 +5,10 @@
 
 # set the parent directory, where {2,4,5}stems directories will be created & monitored.
 GLOBAL_SMD_PATH="/home/kb/spleeter"
+cd "${GLOBAL_SMD_PATH}"
 
+# add the path to spleeter and ffmpeg
+PATH="/opt/anaconda3/bin/:${PATH}"
 
 spleeter_monitor_directory() {
     STEMS="$1"
@@ -23,7 +26,7 @@ spleeter_monitor_directory() {
 
     inotifywait -m "$MONITOR_DIRECTORY" -e close_write -e moved_to | while read NEVERMIND ACTION FILENAME; do
         echo "${LOGNAME} $FILENAME appeared in ${MONITOR_DIRECTORY}. Spleeting $TXT..."
-        spleeter separate -p $MODEL -o "$MONITOR_DIRECTORY" -f "${OUTPUT_SUBDIRECTORY}/{filename}_{instrument}.{codec}" "${MONITOR_DIRECTORY}/${FILENAME}"
+        spleeter separate -p $MODEL -o "${MONITOR_DIRECTORY}" -f "${OUTPUT_SUBDIRECTORY}/{filename}_{instrument}.{codec}" "${MONITOR_DIRECTORY}/${FILENAME}"
         echo "${LOGNAME} $FILENAME spleeting finished."
     done
 }

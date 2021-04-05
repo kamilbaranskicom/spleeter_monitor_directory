@@ -1,0 +1,11 @@
+#!/bin/bash
+
+SMD="/home/kb/spleeter_monitor_directory/spleeter_monitor_directory"
+
+LOG_DIRECTORY="/var/log/spleetermd"
+
+mkdir -p ${LOG_DIRECTORY}
+
+$SMD 2 >> ${LOG_DIRECTORY}/2.log 2>&1 &
+$SMD 4 >> ${LOG_DIRECTORY}/4.log 2>&1 &
+$SMD 5 >> ${LOG_DIRECTORY}/5.log 2>&1 &
