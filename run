@@ -1,11 +1,15 @@
 #!/bin/bash
 
+# path to main script
 SMD="/home/kb/spleeter_monitor_directory/spleeter_monitor_directory"
 
+# path for log files
 LOG_DIRECTORY="/var/log/spleetermd"
 
+# let's create it if it doesn't exist
 mkdir -p ${LOG_DIRECTORY}
 
+# let's run all the daemons
 $SMD 2 >> ${LOG_DIRECTORY}/2.log 2>&1 &
 $SMD 4 >> ${LOG_DIRECTORY}/4.log 2>&1 &
 $SMD 5 >> ${LOG_DIRECTORY}/5.log 2>&1 &
