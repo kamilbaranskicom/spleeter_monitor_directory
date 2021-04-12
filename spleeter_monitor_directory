@@ -19,7 +19,8 @@ spleeter_monitor_directory() {
     MODEL="spleeter:${STEMS}stems-16kHz"
     OUTPUT_SUBDIRECTORY="output"
     OUTPUT_DIRECTORY="${MONITOR_DIRECTORY}/{OUTPUT_SUBDIRECTORY}"
-    LOGNAME="[spleeter_monitor_dir:]"
+    LOGNAME="spleeter_monitor_dir:"
+    DATE=`date --rfc-3339=seconds`
 
     # let's create the directory if it doesn't exist
     mkdir -p "$MONITOR_DIRECTORY"
@@ -27,9 +28,9 @@ spleeter_monitor_directory() {
     echo "${LOGNAME} Monitoring '$MONITOR_DIRECTORY' directory."
 
     inotifywait -m "$MONITOR_DIRECTORY" -e close_write -e moved_to | while read NEVERMIND ACTION FILENAME; do
-        echo "${LOGNAME} $FILENAME appeared in ${MONITOR_DIRECTORY}. Spleeting $TXT..."
+        echo "[${LOGNAME} ${DATE}] ${FILENAME} appeared in ${MONITOR_DIRECTORY}. Spleeting $TXT..."
         spleeter separate -p $MODEL -o "${MONITOR_DIRECTORY}" -f "${OUTPUT_SUBDIRECTORY}/{filename}_{instrument}.{codec}" "${MONITOR_DIRECTORY}/${FILENAME}"
-        echo "${LOGNAME} $FILENAME spleeting finished."
+        echo "[${LOGNAME} ${DATE}] ${FILENAME} spleeting finished."
     done
 }
 
